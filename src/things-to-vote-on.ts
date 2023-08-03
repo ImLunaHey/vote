@@ -1,5 +1,6 @@
 export const thingsToVoteOn = new Map<string, [string, string]>();
 
+thingsToVoteOn.set('61d3e9f1-8295-4de8-b217-21522a5f4cba', ['Eminem', 'Snoop Dogg']);
 thingsToVoteOn.set('faf38e5a-92c6-4708-9068-ecb05edeaf59', ['Light mode', 'Dark mode']);
 thingsToVoteOn.set('45f81eca-9836-4208-be46-fedd19ef978c', ['Cat', 'Dog']);
 thingsToVoteOn.set('8bf24b5e-6935-48ff-bec7-8f4eb9963b73', ['Pancakes', 'Waffles']);
