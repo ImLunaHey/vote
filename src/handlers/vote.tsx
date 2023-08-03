@@ -36,14 +36,16 @@ const generateNewVotingButtons = async (sessionId = randomUUID()) => {
     `
     <button
       class="left panel"
-      hx-post="/vote/${sessionId}/${id}/${thingToVoteOn[0]}"
+      hx-post="/vote/${sessionId}/${id}"
+      hx-vals='{ "choice": "${thingToVoteOn[0]}" }'
       hx-trigger="click"
       hx-target="main"
       hx-swap="innerHTML"
     ><h1>${thingToVoteOn[0]}</h1></button>
     <button
       class="right panel"
-      hx-post="/vote/${sessionId}/${id}/${thingToVoteOn[1]}"
+      hx-post="/vote/${sessionId}/${id}"
+      hx-vals='{ "choice": "${thingToVoteOn[1]}" }'
       hx-trigger="click"
       hx-target="main"
       hx-swap="innerHTML"
@@ -133,11 +135,21 @@ export default defineRoutes((app) => [
   app.get("/vote/:sessionId", (request) =>
     generateNewVotingButtons(request.params.sessionId)
   ),
-  app.post("/vote/:sessionId/:voteId/:choice", async (request) => {
+  app.post("/vote/:sessionId/:voteId", async (request) => {
     try {
       const sessionId = request.params.sessionId;
       const id = request.params.voteId;
-      const choice = request.params.choice;
+      const body = await request.text();
+      const params = body
+        .split(",")
+        .map((_) => {
+          const [a, b] = _.split("=");
+          return {
+            [a]: b,
+          };
+        })
+        .reduce((previous, current) => ({ ...previous, ...current }), {});
+      const choice = params.choice;
       axiom.ingest("vote", [{ sessionId, id, choice }]);
       await axiom.flush();
       return generateResultResponse(sessionId, id);
