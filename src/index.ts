@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { attachRoutes } from './application';
 import * as handlers from './handlers';
 
