@@ -2,7 +2,7 @@
 import { attachRoutes } from './application';
 import * as handlers from './handlers';
 
-const port = 3000;
+const port = process.env.PORT ?? 3000;
 
 Bun.serve({
     port,
