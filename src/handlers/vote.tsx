@@ -99,10 +99,15 @@ const generateResultResponse = async (sessionId = randomUUID(), id: string) => {
   if (!thingToVoteOn) throw new Error("Invalid ID");
   const percentages = await calculatePercentageOfVotes(id);
   const leftTitle = thingToVoteOn[0];
-  const leftPercentage = percentages.find((_) => _[0] === leftTitle)?.[1] ?? 0;
+  const leftPercentage =
+    percentages.find(
+      (_) => `${_[0]}`.replaceAll("%20", " ") === leftTitle
+    )?.[1] ?? 0;
   const rightTitle = thingToVoteOn[1];
   const rightPercentage =
-    percentages.find((_) => _[0] === rightTitle)?.[1] ?? 0;
+    percentages.find(
+      (_) => `${_[0]}`.replaceAll("%20", " ") === rightTitle
+    )?.[1] ?? 0;
   return new Response(
     `
   <div class="left panel"><h1>${leftTitle}</h1><h4>${leftPercentage}%</h4></div>
