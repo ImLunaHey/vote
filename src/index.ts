@@ -1,5 +1,5 @@
 import { attachRoutes } from './application';
-import * as handlers from './handlers';
+import * as handlers from './routes';
 
 const port = process.env.PORT ?? 3000;
 
