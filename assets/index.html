@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Vote</title>
-    <link rel="icon" href="/images/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <style>
       :root {
         --left-panel-color: #ff00f7;
@@ -87,16 +87,8 @@
 
   <body>
     <main>
-      <button
-        class="right panel"
-        hx-get="/vote"
-        hx-trigger="click"
-        hx-target="main"
-        hx-swap="innerHTML"
-      >
-        Start voting
-      </button>
+      <button class="right panel" hx-get="/vote" hx-trigger="click" hx-target="main" hx-swap="innerHTML">Start voting</button>
     </main>
-    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <script src="/assets/js/htmx.org@1.9.4.min.js"></script>
   </body>
 </html>
