@@ -7,7 +7,8 @@ export const favicon = () => Response.file('assets/images/favicon.ico');
 export const htmx = () =>
   Response.file('assets/js/htmx.org@1.9.4.min.js', {
     headers: {
-      'content-type': 'application/javascript; charset=utf-8',
+      'Content-Type': 'application/javascript; charset=utf-8',
+      'Cache-Control': 'max-age: 31536000, immutable',
     },
   });
 
