@@ -7,7 +7,7 @@ import { getRandomItemFromArray } from '../common/get-random-item-from-array';
 import { HtmlPageResponse, HtmlResponse } from '../common/html-response';
 import { VotingButtons } from '../components/voting-buttons';
 import { Completed } from '../components/completed';
-import { Result } from '../components/Result';
+import { Result } from '../components/result';
 import { Failure } from '../components/failure';
 
 const noop = () => {};
