@@ -5,23 +5,23 @@ export const Result = ({ id = randomUUID() as string, sessionId, percentages }: 
   const thingToVoteOn = thingsToVoteOn.get(id);
   if (!thingToVoteOn) throw new Error('Invalid ID');
 
-  const leftTitle = thingToVoteOn[0];
-  const leftPercentage = percentages.find((_) => `${_[0]}`.replaceAll('%20', ' ') === leftTitle)?.[1] ?? 0;
-  const rightTitle = thingToVoteOn[1];
-  const rightPercentage = percentages.find((_) => `${_[0]}`.replaceAll('%20', ' ') === rightTitle)?.[1] ?? 0;
+  const firstTitle = thingToVoteOn[0];
+  const firstPercentage = percentages.find((_) => `${_[0]}`.replaceAll('%20', ' ') === firstTitle)?.[1] ?? 0;
+  const secondTitle = thingToVoteOn[1];
+  const secondPercentage = percentages.find((_) => `${_[0]}`.replaceAll('%20', ' ') === secondTitle)?.[1] ?? 0;
 
   return (
     <>
-      <div className="left panel">
-        <h1>{leftTitle}</h1>
-        <h4>{leftPercentage}%</h4>
+      <div className="first panel">
+        <h1>{firstTitle}</h1>
+        <h4>{firstPercentage}%</h4>
       </div>
       <button className="middle" hx-get={`/vote/${sessionId}`} hx-trigger="click" hx-target="main" hx-swap="innerHTML">
         next
       </button>
-      <div className="right panel">
-        <h1>{rightTitle}</h1>
-        <h4>{rightPercentage}%</h4>
+      <div className="second panel">
+        <h1>{secondTitle}</h1>
+        <h4>{secondPercentage}%</h4>
       </div>
     </>
   );

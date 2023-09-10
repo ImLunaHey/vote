@@ -8,20 +8,22 @@
     <link rel="icon" href="/favicon.ico" />
     <style>
       :root {
-        --left-panel-color: #ff00f7;
-        --right-panel-color: #0095f8;
+        /* Default */
+        --default-panel-color: #00ff95;
+        /* Left | Top */
+        --first-panel-color: #ff00f7;
+        /* Middle */
         --middle-color: #ffffff;
+        /* Right | Bottom */
+        --second-panel-color: #0095f8;
       }
 
       * {
         font-family: monospace;
       }
 
-      body,
-      html {
-        min-height: 100px;
-        min-width: 800px;
-        height: 100%;
+      html,
+      body {
         margin: 0;
         justify-content: center;
         align-items: center;
@@ -48,19 +50,21 @@
         flex: 1;
         flex-direction: column;
         height: 100%;
+        width: 100%;
         font-size: 18px;
         display: flex;
         justify-content: center;
         align-items: center;
         border: none;
+        background-color: var(--default-panel-color);
       }
 
-      .left {
-        background-color: var(--left-panel-color);
+      .first {
+        background-color: var(--first-panel-color);
       }
 
-      .right {
-        background-color: var(--right-panel-color);
+      .second {
+        background-color: var(--second-panel-color);
       }
 
       .middle {
@@ -82,12 +86,31 @@
         background: blueviolet;
         color: white;
       }
+
+      @media screen and (orientation: portrait) {
+        html,
+        body {
+          height: 100%;
+        }
+        main {
+          flex-direction: column;
+        }
+      }
+
+      @media screen and (orientation: landscape) {
+        html,
+        body {
+          min-height: 100px;
+          min-width: 800px;
+          height: 100%;
+        }
+      }
     </style>
   </head>
 
   <body>
     <main>
-      <button class="right panel" hx-get="/vote" hx-trigger="click" hx-target="main" hx-swap="innerHTML">Start voting</button>
+      <button class="panel" hx-get="/vote" hx-trigger="click" hx-target="main" hx-swap="innerHTML"><h1>Start voting</h1></button>
     </main>
     <script src="/assets/js/htmx.org@1.9.4.min.js"></script>
   </body>

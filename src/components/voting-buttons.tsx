@@ -1,6 +1,6 @@
-const VotingButton = ({ sessionId, id, thingToVoteOn, side }: { sessionId: string; id: string; thingToVoteOn: string; side: 'left' | 'right' }) => (
+const VotingButton = ({ sessionId, id, thingToVoteOn, position }: { sessionId: string; id: string; thingToVoteOn: string; position: 'first' | 'second' }) => (
   <button
-    className={`${side} panel`}
+    className={`${position} panel`}
     hx-post={`/vote/${sessionId}/${id}`}
     hx-vals={JSON.stringify({ choice: thingToVoteOn })}
     hx-trigger="click"
@@ -13,8 +13,8 @@ const VotingButton = ({ sessionId, id, thingToVoteOn, side }: { sessionId: strin
 
 export const VotingButtons = ({ sessionId, id, thingToVoteOn }: { sessionId: string; id: string; thingToVoteOn: [string, string] }) => (
   <>
-    <VotingButton {...{ sessionId, id, thingToVoteOn: thingToVoteOn[0], side: 'left' }} />
+    <VotingButton {...{ sessionId, id, thingToVoteOn: thingToVoteOn[0], position: 'first' }} />
     <div className="middle">or</div>
-    <VotingButton {...{ sessionId, id, thingToVoteOn: thingToVoteOn[1], side: 'right' }} />
+    <VotingButton {...{ sessionId, id, thingToVoteOn: thingToVoteOn[1], position: 'second' }} />
   </>
 );
