@@ -1,35 +1,31 @@
 import '@total-typescript/ts-reset';
 import { randomUUID } from 'crypto';
-import { Axiom } from '@axiomhq/js';
 import { defineRoutes } from '../application';
 import { thingsToVoteOn } from '../things-to-vote-on';
-import { getRandomItemFromArray } from '../common/get-random-item-from-array';
 import { HtmlPageResponse, HtmlResponse } from '../common/html-response';
 import { VotingButtons } from '../components/voting-buttons';
 import { Completed } from '../components/completed';
 import { Result } from '../components/result';
 import { Failure } from '../components/failure';
-
-const noop = () => {};
-const logger = process.env.NODE_ENV === 'test' ? ({ warn: noop, debug: noop, info: noop, error: noop } as typeof console) : console;
-
-export const axiom = new Axiom({
-  token: process.env.AXIOM_TOKEN,
-  orgId: process.env.AXIOM_ORG_ID,
-});
-
-const getThingsThisSessionHasVotedOn = (sessionId: string) =>
-  axiom.query(`vote | where sessionId=="${sessionId}" | summarize count() by bin_auto(_time), id | project id`).then((_) => _.matches?.map((_) => _.data.id as string) ?? []);
+import { axiom } from '../common/axiom';
+import { logger } from '../common/logger';
+import { VoteService } from '../services/vote';
+import { createChoicesComponent } from '../components/choices';
 
 const generateNewVotingButtons = async (sessionId?: string) => {
-  const thingsThisSessionHasVotedOn = sessionId ? await getThingsThisSessionHasVotedOn(sessionId) : [];
-  const thingsToVoteOnKeys = [...thingsToVoteOn.keys()].filter((key) => !thingsThisSessionHasVotedOn?.includes(key));
-  const id = getRandomItemFromArray(thingsToVoteOnKeys);
-  if (!id) return new HtmlResponse(<Completed />);
-  const thingToVoteOn = thingsToVoteOn.get(id);
-  if (!thingToVoteOn) return new HtmlResponse(<Completed />);
+  const voteService = new VoteService(sessionId);
+  const nextThingToVoteOn = await voteService.getNextThingToVoteOn();
+  if (!nextThingToVoteOn) return new HtmlResponse(<Completed />);
   const userSessionId = sessionId ?? (randomUUID() as string);
-  return new HtmlResponse(<VotingButtons {...{ id, sessionId: userSessionId, thingToVoteOn }} />);
+  const Choices = await createChoicesComponent(userSessionId);
+  return new HtmlResponse(
+    (
+      <>
+        <VotingButtons {...{ id: nextThingToVoteOn.id, sessionId: userSessionId, choices: nextThingToVoteOn.choices }} />
+        <Choices />
+      </>
+    )
+  );
 };
 
 const calculatePercentageOfVotes = async (id: string) => {
@@ -49,7 +45,20 @@ const calculatePercentageOfVotes = async (id: string) => {
   return roundedPercentages.map((percentage, index) => [Object.keys(votes)[index], percentage]);
 };
 
-export const vote = () => generateNewVotingButtons();
+export const vote = async () => {
+  const sessionId = randomUUID() as string;
+  const Choices = await createChoicesComponent(sessionId);
+  return new HtmlResponse(
+    (
+      <>
+        <button className="panel" hx-get={`/vote/${sessionId}`} hx-trigger="click" hx-target="main" hx-swap="innerHTML">
+          <h1>Start voting</h1>
+        </button>
+        <Choices />
+      </>
+    )
+  );
+};
 export const voteWithSession = (request: { params: { sessionId: string } }) => generateNewVotingButtons(request.params.sessionId);
 export const voteWithId = async (request: { params: { sessionId: string; voteId: string }; text: () => Promise<string> }) => {
   const id = request.params.voteId;
@@ -68,10 +77,18 @@ export const voteWithId = async (request: { params: { sessionId: string; voteId:
       })
       .reduce((previous, current) => ({ ...previous, ...current }), {});
     const choice = params.choice;
+    const Choices = await createChoicesComponent(sessionId);
     axiom.ingest('vote', [{ sessionId, id, choice }]);
     await axiom.flush();
     const percentages = await calculatePercentageOfVotes(id);
-    return new HtmlResponse(<Result {...{ id, sessionId, percentages }} />);
+    return new HtmlResponse(
+      (
+        <>
+          <Result {...{ id, sessionId, percentages }} />
+          <Choices />
+        </>
+      )
+    );
   } catch (error) {
     logger.error(error);
     return new HtmlPageResponse(<Failure message={error instanceof Error ? error.message : `${error}`} />, { status: 404 });

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "bun -v && bun run ./src/index.ts",
+    "dev": "bun --watch run ./src/index.ts",
     "test": "vitest run --coverage"
   },
   "devDependencies": {

@@ -88,6 +88,17 @@
         color: white;
       }
 
+      .choices {
+        position: fixed;
+        background: white;
+        padding: 5px;
+        bottom: 0;
+        text-align: center;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        left: 50%;
+      }
+
       @media screen and (orientation: portrait) {
         html,
         body {
@@ -114,9 +125,7 @@
   </head>
 
   <body>
-    <main>
-      <button class="panel" hx-get="/vote" hx-trigger="click" hx-target="main" hx-swap="innerHTML"><h1>Start voting</h1></button>
-    </main>
+    <main hx-get="/vote" hx-trigger="load" hx-target="main" hx-swap="innerHTML"></main>
     <script src="/assets/js/htmx.org@1.9.4.min.js"></script>
   </body>
 </html>
