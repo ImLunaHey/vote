@@ -88,3 +88,5 @@ thingsToVoteOn.set('6e3a37b0-268e-4293-b277-657099c546ca', ['Day', 'Night']);
 
 // Movies
 thingsToVoteOn.set('396ac934-6214-4c9e-9635-d712ef956e10', ['Barbie', 'Oppenheimer']);
+
+export const thingsToVoteOnCount = thingsToVoteOn.size;
