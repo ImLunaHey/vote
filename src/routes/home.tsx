@@ -1,10 +1,27 @@
+import { readFileSync } from 'fs';
 import { Response } from '@nbit/bun';
 import { defineRoutes } from '../application';
 
-export const index = () => Response.file('assets/index.html');
-export const favicon = () => Response.file('assets/images/favicon.ico');
+const indexFile = readFileSync('assets/index.html', 'utf-8');
+const faviconFile = readFileSync('assets/images/favicon.ico');
+const htmxFile = readFileSync('assets/js/htmx.org@1.9.4.min.js', 'utf-8');
+
+export const index = () =>
+  new Response(indexFile, {
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+    },
+  });
+
+export const favicon = () =>
+  new Response(faviconFile, {
+    headers: {
+      'Content-Type': 'image/vnd.microsoft.icon',
+    },
+  });
+
 export const htmx = () =>
-  Response.file('assets/js/htmx.org@1.9.4.min.js', {
+  new Response(htmxFile, {
     headers: {
       'Content-Type': 'application/javascript; charset=utf-8',
       'Cache-Control': 'max-age: 31536000, immutable',
