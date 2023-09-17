@@ -1,3 +1,27 @@
-import { noop } from './noop';
+import { Logger, z, BaseSchema } from '@imlunahey/logger';
 
-export const logger = process.env.NODE_ENV === 'test' ? ({ warn: noop, debug: noop, info: noop, error: noop } as typeof console) : console;
+const schema = {
+    debug: {
+        request: z.object({
+            url: z.string(),
+            method: z.string(),
+            headers: z.record(z.string()),
+        }),
+    },
+    error: {
+        INTERNAL_SERVER_ERROR: z.object({})
+    },
+} satisfies BaseSchema;
+
+export const logger = new Logger({
+    service: 'vote',
+    schema,
+});
+
+export const logRequest = (request: any) => {
+    logger.debug('request', {
+        url: request.url,
+        method: request.method,
+        headers: Object.fromEntries([...request.headers.entries()]),
+    });
+};

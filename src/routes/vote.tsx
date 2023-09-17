@@ -8,7 +8,7 @@ import { Completed } from '../components/completed';
 import { Result } from '../components/result';
 import { Failure } from '../components/failure';
 import { axiom } from '../common/axiom';
-import { logger } from '../common/logger';
+import { logRequest, logger } from '../common/logger';
 import { VoteService } from '../services/vote';
 import { createChoicesComponent } from '../components/choices';
 
@@ -45,7 +45,8 @@ const calculatePercentageOfVotes = async (id: string) => {
   return roundedPercentages.map((percentage, index) => [Object.keys(votes)[index], percentage]);
 };
 
-export const vote = async () => {
+export const vote = async (request: any) => {
+  logRequest(request);
   const sessionId = randomUUID() as string;
   const Choices = await createChoicesComponent(sessionId);
   return new HtmlResponse(
@@ -59,8 +60,12 @@ export const vote = async () => {
     )
   );
 };
-export const voteWithSession = (request: { params: { sessionId: string } }) => generateNewVotingButtons(request.params.sessionId);
+export const voteWithSession = (request: { params: { sessionId: string } }) => {
+  logRequest(request);
+  return generateNewVotingButtons(request.params.sessionId);
+};
 export const voteWithId = async (request: { params: { sessionId: string; voteId: string }; text: () => Promise<string> }) => {
+  logRequest(request);
   const id = request.params.voteId;
   if (!thingsToVoteOn.has(id)) return new HtmlPageResponse(<Failure message="Nothing found for the provided ID" />, { status: 404 });
 
@@ -90,7 +95,9 @@ export const voteWithId = async (request: { params: { sessionId: string; voteId:
       )
     );
   } catch (error) {
-    logger.error(error);
+    logger.error('INTERNAL_SERVER_ERROR', {
+      error,
+    });
     return new HtmlPageResponse(<Failure message={error instanceof Error ? error.message : `${error}`} />, { status: 404 });
   }
 };

@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@axiomhq/js": "^0.1.3",
-    "@nbit/bun": "^0.10.0",
+    "@imlunahey/logger": "latest",
+    "@nbit/bun": "latest",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/jsdom": "^21.1.1",
     "@types/react-dom": "^18.2.7",
@@ -23,6 +24,7 @@
     "jsdom": "^22.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
     "vitest": "^0.34.1",
     "zod": "^3.21.4"
   }

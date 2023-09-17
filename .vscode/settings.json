@@ -4,5 +4,6 @@
     "cSpell.words": [
         "htmx",
         "vals"
-    ]
+    ],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }
