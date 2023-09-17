@@ -1,7 +1,7 @@
 import { Logger, z, BaseSchema } from '@imlunahey/logger';
 
 const schema = {
-    debug: {
+    info: {
         request: z.object({
             url: z.string(),
             method: z.string(),
@@ -19,7 +19,7 @@ export const logger = new Logger({
 });
 
 export const logRequest = (request: any) => {
-    logger.debug('request', {
+    logger.info('request', {
         url: request.url,
         method: request.method,
         headers: Object.fromEntries([...request.headers.entries()]),
