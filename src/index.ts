@@ -32,6 +32,9 @@ const app = new Application({
   }),
 });
 
+// Robots.txt
+app.get('/robots.txt', () => 'User-agent: *\nAllow: /');
+
 // HTMX
 app.get('/assets/js/htmx.org@1.9.4.min.js', request => {
   console.log('THIS ONE!');
