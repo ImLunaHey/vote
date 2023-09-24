@@ -33,11 +33,13 @@ const app = new Application({
 });
 
 // Robots.txt
-app.get('/robots.txt', () => new Response('User-agent: *\nAllow: /'));
+app.get('/robots.txt', request => {
+  logRequest(request);
+  return new Response('User-agent: *\nAllow: /');
+});
 
 // HTMX
 app.get('/assets/js/htmx.org@1.9.4.min.js', request => {
-  console.log('THIS ONE!');
   logRequest(request);
   return new Response(htmxFile, {
     headers: {
