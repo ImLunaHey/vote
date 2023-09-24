@@ -1,3 +1,4 @@
+import React from 'react';
 import { VoteService } from '../services/vote';
 import { thingsToVoteOnCount } from '../things-to-vote-on';
 
