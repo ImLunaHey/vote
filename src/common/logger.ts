@@ -1,9 +1,10 @@
 import { Logger, z, BaseSchema } from '@imlunahey/logger';
+import { RouteWithParams } from 'xirelta';
 
 const schema = {
     info: {
         request: z.object({
-            url: z.string(),
+            path: z.string(),
             method: z.string(),
             headers: z.record(z.string()),
         }),
@@ -18,10 +19,10 @@ export const logger = new Logger({
     schema,
 });
 
-export const logRequest = (request: any) => {
+export const logRequest = (request: Parameters<RouteWithParams<any, any, any>>[0]) => {
     logger.info('request', {
-        url: request.url,
+        path: request.path,
         method: request.method,
-        headers: Object.fromEntries([...request.headers.entries()]),
+        headers: request.safeHeaders,
     });
 };
