@@ -3,7 +3,7 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "start": "bun -v && bun run ./src/index.ts",
+    "start": "bun -v && bun --smol run ./src/index.ts",
     "dev": "bun --watch run ./src/index.ts",
     "test": "bun test --coverage"
   },
