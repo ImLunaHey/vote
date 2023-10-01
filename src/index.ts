@@ -1,35 +1,18 @@
-import { readFileSync } from 'fs';
-import chalk from 'chalk';
-import { Logger, z } from '@imlunahey/logger';
 import { logRequest } from './common/logger';
 import { Application } from 'xirelta';
 
-const faviconFile = readFileSync('assets/images/favicon.ico');
-const htmxFile = readFileSync('assets/js/htmx.org@1.9.4.min.js', 'utf-8');
-
 const app = new Application({
-  logger: new Logger({
-    service: 'demo',
-    schema: {
-      debug: {
-        'Registered routes': z.object({
-          routes: z.array(z.object({
-            path: z.string(),
-            method: z.string(),
-          }))
-        }),
-        'Web server closing connections': z.object({
-          pendingRequests: z.number(),
-          pendingWebSockets: z.number(),
-        }),
-      },
-      info: {
-        'Web server started': z.object({ port: z.number() }),
-        'Web server stopping': z.object({}),
-        'Web server stopped': z.object({}),
-      },
+  logger: {
+    debug(message: string, meta: Record<string, unknown>) {
+      console.debug(JSON.stringify({ level: 'debug', message, meta }, null, 0));
     },
-  }),
+    info(message: string, meta: Record<string, unknown>) {
+      console.info(JSON.stringify({ level: 'info', message, meta }, null, 0));
+    },
+    error(message: string, meta: Record<string, unknown>) {
+      console.error(JSON.stringify({ level: 'error', message, meta }, null, 0));
+    },
+  },
 });
 
 // Robots.txt
@@ -41,7 +24,7 @@ app.get('/robots.txt', request => {
 // HTMX
 app.get('/assets/js/htmx.org@1.9.4.min.js', request => {
   logRequest(request);
-  return new Response(htmxFile, {
+  return new Response(Bun.file('assets/js/htmx.org@1.9.4.min.js'), {
     headers: {
       'Content-Type': 'application/javascript; charset=utf-8',
       'Cache-Control': 'max-age: 31536000, immutable',
@@ -52,7 +35,7 @@ app.get('/assets/js/htmx.org@1.9.4.min.js', request => {
 // Favicon
 app.get('/favicon.ico', request => {
   logRequest(request);
-  return new Response(faviconFile, {
+  return new Response(Bun.file('assets/images/favicon.ico'), {
     headers: {
       'Content-Type': 'image/vnd.microsoft.icon',
     },
@@ -62,7 +45,7 @@ app.get('/favicon.ico', request => {
 try {
   await app.start();
 } catch (error: unknown) {
-  console.error(`${chalk.red('Error')}: ${(error as Error).message}`);
+  app.logger.error('Application crashed', { error });
   await app.stop();
   process.exit(1);
 }

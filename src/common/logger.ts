@@ -20,9 +20,13 @@ export const logger = new Logger({
 });
 
 export const logRequest = (request: Parameters<RouteWithParams<any, any, any>>[0]) => {
-    logger.info('request', {
-        path: request.path,
-        method: request.method,
-        headers: request.safeHeaders,
-    });
+    console.debug(JSON.stringify({
+        level: 'debug',
+        message: 'request',
+        meta: {
+            path: request.path,
+            method: request.method,
+            headers: request.safeHeaders,
+        }
+    }, null, 0));
 };
