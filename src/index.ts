@@ -1,7 +1,9 @@
-import { logRequest } from './common/logger';
+import { logRequest, logger } from './common/logger';
 import { Application } from 'xirelta';
 
-const app = new Application({});
+const app = new Application({
+  logger,
+});
 
 // Robots.txt
 app.get('/robots.txt', request => {
