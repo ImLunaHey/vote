@@ -1,19 +1,7 @@
 import { logRequest } from './common/logger';
 import { Application } from 'xirelta';
 
-const app = new Application({
-  logger: {
-    debug(message: string, meta: Record<string, unknown>) {
-      console.debug(JSON.stringify({ level: 'debug', message, meta }, null, 0));
-    },
-    info(message: string, meta: Record<string, unknown>) {
-      console.info(JSON.stringify({ level: 'info', message, meta }, null, 0));
-    },
-    error(message: string, meta: Record<string, unknown>) {
-      console.error(JSON.stringify({ level: 'error', message, meta }, null, 0));
-    },
-  },
-});
+const app = new Application({});
 
 // Robots.txt
 app.get('/robots.txt', request => {

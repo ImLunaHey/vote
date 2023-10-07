@@ -48,12 +48,8 @@ const post: RouteWithParams<'POST', '/vote/:sessionId/:voteId'> = async request 
             <Choices />
         </>;
     } catch (error) {
-        console.error({
-            message: 'INTERNAL_SERVER_ERROR',
-            level: 'error',
-            meta: {
-                error,
-            },
+        logger.error('INTERNAL_SERVER_ERROR', {
+            error,
         });
         return new HtmlPageResponse(<Failure message={error instanceof Error ? error.message : `${error}`} />, { status: 404 });
     }
