@@ -41,7 +41,6 @@ const post: RouteWithParams<'POST', '/vote/:sessionId/:voteId'> = async request 
         const choice = body.choice;
         const Choices = await createChoicesComponent(sessionId);
         axiom.ingest('vote', [{ sessionId, id, choice }]);
-        await axiom.flush();
         const percentages = await calculatePercentageOfVotes(id);
         return <>
             <Result {...{ id, sessionId, percentages }} />
