@@ -1,7 +1,15 @@
 import { randomUUID } from 'crypto';
 import { thingsToVoteOn } from '../things-to-vote-on';
 
-export const Result = ({ id = randomUUID() as string, sessionId, percentages }: { id: string; sessionId: string; percentages: (string | number)[][] }) => {
+export const Result = ({
+  id = randomUUID() as string,
+  sessionId,
+  percentages,
+}: {
+  id: string;
+  sessionId: string;
+  percentages: (string | number)[][];
+}) => {
   const thingToVoteOn = thingsToVoteOn.get(id);
   if (!thingToVoteOn) throw new Error('Invalid ID');
 
@@ -16,7 +24,14 @@ export const Result = ({ id = randomUUID() as string, sessionId, percentages }: 
         <h1>{firstTitle}</h1>
         <h4>{firstPercentage}%</h4>
       </div>
-      <button className="middle" hx-get={`/vote/${sessionId}`} hx-trigger="click" hx-target="main" hx-swap="innerHTML">
+      <button
+        className="middle"
+        hx-get={`/vote/${sessionId}`}
+        hx-trigger="click"
+        hx-target="main"
+        hx-swap="innerHTML"
+        data-umami-event="next"
+      >
         next
       </button>
       <div className="second panel">
